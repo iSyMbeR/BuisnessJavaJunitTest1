@@ -21,11 +21,16 @@ public class BankImpl implements Bank {
                 .address(address)
                 .amount(new BigDecimal(0))
                 .build();
-        if (accountHashMap.containsKey(account.getId())) {
 
-        } else {
+        //jezeli istenieje uzytkownik z tkaim samym imieniem i adresem
+        for (Map.Entry<Long, Account> entry : accountHashMap.entrySet()) {
+            if (entry.getValue().getName().equals(name) && entry.getValue().getAddress().equals(address)) {
+                return entry.getKey();
+            }
+        }
+        //jezeli nie ma takiego id to dodaje konto do hashmapy
+        if (!accountHashMap.containsKey(account.getId())) {
             accountHashMap.put(account.getId(), account);
-
         }
         return account.getId();
     }
