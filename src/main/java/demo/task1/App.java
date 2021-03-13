@@ -1,19 +1,31 @@
 package demo.task1;
 
+
+import lombok.extern.log4j.Log4j2;
+
 import java.math.BigDecimal;
 
+@Log4j2
 public class App {
-
+    /**
+     * @param args nic ciekawego
+     *             Metoda uruchamia aplikacje
+     */
     public static void main(String[] args) {
-        System.out.println("start");
-
         Bank bank = new BankImpl();
+        log.info("utworzenie instancji banku klasy" + bank.getClass());
 
-        bank.createAccount("KamilNowak", "Ziemia");
-        bank.createAccount("ElonMusk", "Mars");
-
-        Long idKamil = bank.findAccount("KamilNowak", "Ziemia");
-        Long idElon = bank.findAccount("ElonMusk", "Mars");
+        Long idKamil = 0L;
+        Long idElon = 0L;
+        try {
+            bank.createAccount("KamilNowak", "Ziemia");
+            bank.createAccount("ElonMusk", "Mars");
+            idKamil = bank.findAccount("KamilNowak", "Ziemia");
+            idElon = bank.findAccount("ElonMusk", "Mars");
+            log.debug("Created account with ids : " + idKamil + " and " + idElon);
+        } catch (Throwable e) {
+            log.error("Indexing error", e);
+        }
 
 
         bank.getBalance(idKamil);

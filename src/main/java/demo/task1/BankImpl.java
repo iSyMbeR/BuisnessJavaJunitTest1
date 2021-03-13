@@ -39,7 +39,6 @@ public class BankImpl implements Bank {
     public Long findAccount(String name, String address) {
         for (Map.Entry<Long, Account> entry : accountHashMap.entrySet()) {
             if (entry.getValue().getName().equals(name) && entry.getValue().getAddress().equals(address)) {
-                System.out.println("Znaleziono konto " + name + " " + address);
                 return entry.getKey();
             }
         }

@@ -24,41 +24,33 @@ public interface Bank {
     /**
      * Dodaje srodki do konta.
      *
-     * @param id
+     * @param id indeks konta na ktory ma byc przelana kasa
      * @param amount srodki
-     * @throws AccountIdException, gdy id konta jest nieprawidlowe
      */
     void deposit(Long id, BigDecimal amount);
 
     /**
      * Zwraca ilosc srodkow na koncie.
      *
-     * @param id
+     * @param id indeks konta z ktorego pobierany jest stan konta
      * @return srodki
-     * @throws AccountIdException, gdy id konta jest nieprawidlowe
      */
     BigDecimal getBalance(Long id);
 
     /**
      * Pobiera srodki z konta.
      *
-     * @param id
+     * @param id indeks konta z ktorego sa pobierane pieniadze
      * @param amount srodki
-     * @throws AccountIdException, gdy id konta jest nieprawidlowe
-     * @throws InsufficientFundsException, gdy srodki na koncie nie sa
-     * wystarczajace do wykonania operacji
      */
     void withdraw(Long id, BigDecimal amount);
 
     /**
      * Przelewa srodki miedzy kontami.
      *
-     * @param idSource
-     * @param idDestination
+     * @param idSource id konta, z ktorego przesylamy pieniadze
+     * @param idDestination id konta, do ktorego sa przesylane pieniadze
      * @param amount srodki
-     * @throws AccountIdException, gdy id konta jest nieprawidlowe
-     * @throws InsufficientFundsException, gdy srodki na koncie nie sa
-     * wystarczajace do wykonania operacji
      */
     void transfer(Long idSource, Long idDestination, BigDecimal amount);
 
