@@ -1,5 +1,9 @@
 package demo.task1;
 
+import demo.task1.dao.AccountDao;
+import demo.task1.dao.AccountOperationDao;
+import demo.task1.dao.jdbc.AccountDaoJdbcImpl;
+import demo.task1.dao.jdbc.AccountOperationDaoJdbcImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,15 +13,21 @@ import java.math.BigDecimal;
 public class BankTest {
 
     private Bank bank;
-
+    AccountDao accountDao;
+    AccountOperationDao accountOperationDao;
     @BeforeEach
     void setup() {
         bank = new BankImpl();
+        accountDao = new AccountDaoJdbcImpl();
+        accountOperationDao = new AccountOperationDaoJdbcImpl();
     }
+
 
     @AfterEach
     void clean() {
         bank = null;
+        accountDao = null;
+        accountOperationDao = null;
     }
 
     @Test

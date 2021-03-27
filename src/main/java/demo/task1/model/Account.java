@@ -1,4 +1,4 @@
-package demo.task1;
+package demo.task1.model;
 
 import lombok.*;
 
@@ -13,10 +13,11 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
 @ToString
 public class Account {
     private Long id;
-    private String name;
+    private String login;
     private String address;
     private BigDecimal amount;
 }

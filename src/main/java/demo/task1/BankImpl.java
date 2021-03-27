@@ -1,64 +1,75 @@
 package demo.task1;
 
+import demo.task1.dao.AccountDao;
+import demo.task1.dao.AccountOperationDao;
+import demo.task1.dao.jdbc.AccountDaoJdbcImpl;
+import demo.task1.dao.jdbc.AccountOperationDaoJdbcImpl;
+import demo.task1.model.Account;
+import demo.task1.model.AccountOperation;
+
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class BankImpl implements Bank {
     HashMap<Long, Account> accountHashMap;
     private Account account;
-
+    AccountDao accountDao;
+    AccountOperationDao accountOperationDao;
     public BankImpl() {
         accountHashMap = new HashMap<>();
+        accountDao = new AccountDaoJdbcImpl();
+        accountOperationDao = new AccountOperationDaoJdbcImpl();
     }
 
     @Override
-    public Long createAccount(String name, String address) {
+    public Long createAccount(String login, String address) {
         Account account = Account.builder()
-                .id(UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE)
-                .name(name)
+                .login(login)
                 .address(address)
-                .amount(new BigDecimal(0))
+                .amount(new BigDecimal(10000))
                 .build();
-
-        //jezeli istenieje uzytkownik z tkaim samym imieniem i adresem
-        for (Map.Entry<Long, Account> entry : accountHashMap.entrySet()) {
-            if (entry.getValue().getName().equals(name) && entry.getValue().getAddress().equals(address)) {
-                return entry.getKey();
-            }
-        }
-        //jezeli nie ma takiego id to dodaje konto do hashmapy
-        if (!accountHashMap.containsKey(account.getId())) {
-            accountHashMap.put(account.getId(), account);
-        }
+       try{
+           accountDao.save(account);
+       } catch (Exception sqlException){
+           System.out.println(account.getLogin() + " znajduje się już w bazie");
+       }
         return account.getId();
     }
 
     @Override
-    public Long findAccount(String name, String address) {
-        for (Map.Entry<Long, Account> entry : accountHashMap.entrySet()) {
-            if (entry.getValue().getName().equals(name) && entry.getValue().getAddress().equals(address)) {
-                return entry.getKey();
+    public Long findAccount(String login, String address) {
+        AtomicReference<Long> idFoundAccount = new AtomicReference<>(0L);
+        List<Account> accountList = accountDao.findAll();
+        accountList.forEach(account1 -> {
+            if(account1.getLogin().equals(login) && account1.getAddress().equals(address)){
+                idFoundAccount.set(account1.getId());
             }
+        });
+        if(!idFoundAccount.get().equals(0L)){
+            System.out.println("Znaleziono uzytkownika o loginie " + login +" oraz adresie " + address);
+            return idFoundAccount.get();
         }
         return null;
     }
 
     public Account findAccountById(Long id) {
-        for (Map.Entry<Long, Account> entry : accountHashMap.entrySet()) {
-            if (entry.getKey().equals(id))
-                return entry.getValue();
-        }
-        return null;
+        Optional<Account> acc = accountDao.findById(id);
+        return acc.orElse(null);
     }
 
     @Override
     public void deposit(Long id, BigDecimal amount) {
-        account = findAccountById(id);
-        if (account != null) {
-            account.setAmount(account.getAmount().add(amount));
-            accountHashMap.replace(account.getId(), account);
+        Account acc = findAccountById(id);
+        if (acc != null){
+            AccountOperation accountOperation = AccountOperation.builder()
+                    .source(acc)
+                    .destination(acc)
+                    .type(OperationType.DEPOSIT)
+                    .amount(amount)
+                    .build();
+            accountOperationDao.deposit(accountOperation);
+            System.out.println(accountOperation.toString());
         } else {
             System.out.println("Nie znaleziono takiego konta");
             throw new AccountIdException();
