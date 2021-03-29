@@ -1,0 +1,2 @@
+09:41:56.499 [main] INFO  demo.task1.App - utworzenie instancji banku klasyclass demo.task1.bank.BankImpl
+09:41:56.608 [main] DEBUG demo.task1.App - Created account with ids : 4708362641540531285 and 5632627218645470021

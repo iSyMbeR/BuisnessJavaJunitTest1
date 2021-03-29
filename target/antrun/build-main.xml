@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="maven-antrun-" default="main">
+  <target name="main">
+    <copy file="E:\PROJEKTY_STUDIA\JAVA_BIZNESOWY\Task2\task1\target\classes/META-INF/persistence.xml.proper" tofile="E:\PROJEKTY_STUDIA\JAVA_BIZNESOWY\Task2\task1\target\classes/META-INF/persistence.xml" />
+  </target>
+</project>
