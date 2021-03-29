@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: demo.task1.AccountDaoTest
--------------------------------------------------------------------------------
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.691 s - in demo.task1.AccountDaoTest
