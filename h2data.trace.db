@@ -1,9 +1,0 @@
-2021-03-29 11:42:51 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLException: Table "ACCOUNT" not found; SQL statement:
-SELECT 1 FROM ACCOUNT [42102-194]
-2021-03-29 11:42:51 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLException: Table "ACCOUNTOPERATION" not found; SQL statement:
-SELECT 1 FROM ACCOUNTOPERATION [42102-194]
-2021-03-29 11:42:51 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLException: Table "ACCOUNT_ACCOUNTOPERATION" not found; SQL statement:
-SELECT 1 FROM ACCOUNT_ACCOUNTOPERATION [42102-194]

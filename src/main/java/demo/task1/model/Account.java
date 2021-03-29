@@ -1,5 +1,7 @@
 package demo.task1.model;
 
+import demo.task1.dao.AccountDao;
+import demo.task1.dao.AccountDaoJpaImpl;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,6 +21,25 @@ import java.util.List;
 @Setter
 @Entity
 @ToString
+@NamedQueries({
+        @NamedQuery(name = "Account.findByLogin",
+                query = "select a from Account a where a.name=?1"),
+        @NamedQuery(name = "Account.findByAddress",
+                query = "select a from Account a where a.address=?1"),
+        @NamedQuery(name = "Account.findByAmount",
+                query = "select a from Account a where a.amount=?1"),
+        @NamedQuery(name = "Account.findByAmountBetween",
+                query = "select a from Account a where a.amount BETWEEN ?1 AND ?2"),
+        @NamedQuery(name = "Account.findByLoginAndAddress",
+                query = "select a from Account a where a.name = ?1 AND a.address = ?2"),
+        @NamedQuery(name = "Account.findLoginLike",
+                query = "select a from Account a where a.name LIKE ?1"),
+        @NamedQuery(name = "Account.findMaxAmount",
+                query = "select a from Account a where a.amount = (select max(b.amount) from Account b)"),
+        @NamedQuery(name = "Account.findMinAmount",
+                query = "select a from Account a where a.amount = (select min(b.amount) from Account b)")
+})
+
 public class Account extends AbstractModel {
     @Column(unique = true)
     private String name;
@@ -33,11 +54,12 @@ public class Account extends AbstractModel {
         this.name = login;
     }
 
-    public void addOperation(AccountOperation accountOperation){
-            accountOperations.add(accountOperation);
+    public void addOperation(AccountOperation accountOperation) {
+        accountOperations.add(accountOperation);
     }
 
-    public void addOperation(OperationType operationType, BigDecimal amount){
+    public void addOperation(OperationType operationType, BigDecimal amount) {
+        AccountDao accountDao = new AccountDaoJpaImpl();
         if (operationType.equals(OperationType.DEPOSIT)) {
             accountOperations.add(AccountOperation.builder()
                     .type(OperationType.DEPOSIT)
@@ -46,8 +68,10 @@ public class Account extends AbstractModel {
                     .amount(this.getAmount().add(amount))
                     .operationStatus(true)
                     .build());
-        } else if (operationType.equals(OperationType.WITHDRAW)){
-            if (!(this.getAmount().subtract(amount).signum() < 0)){
+            this.setAmount(this.getAmount().add(amount));
+            accountDao.update(this);
+        } else if (operationType.equals(OperationType.WITHDRAW)) {
+            if (!(this.getAmount().subtract(amount).signum() < 0)) {
                 accountOperations.add(AccountOperation.builder()
                         .type(OperationType.WITHDRAW)
                         .source(this)
@@ -55,6 +79,8 @@ public class Account extends AbstractModel {
                         .amount(this.getAmount().subtract(amount))
                         .operationStatus(true)
                         .build());
+                this.setAmount(this.getAmount().subtract(amount));
+                accountDao.update(this);
             }
         } else
             throw new IllegalArgumentException();

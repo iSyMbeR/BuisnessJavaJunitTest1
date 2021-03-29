@@ -9,11 +9,11 @@
         <class>demo.task1.model.Account</class>
         <class>demo.task1.model.AccountOperation</class>
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:file:./h2data;"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:./h2base"/>
             <property name="javax.persistence.jdbc.user" value="sa"/>
             <property name="javax.persistence.jdbc.password" value="sa"/>
             <property name="eclipselink.logging.level" value="FINE"/>
-            <property name="javax.persistence.schema-generation.database.action" value="create"/>
+            <property name="javax.persistence.schema-generation.database.action" value="none"/>
         </properties>
     </persistence-unit>
 </persistence>
